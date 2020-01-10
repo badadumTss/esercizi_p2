@@ -1,3 +1,6 @@
+#ifndef STACK_H
+#define STACK_H
+
 #include<iostream>
 
 template<class T=char, int num=100>
@@ -144,15 +147,11 @@ public:
 };
 
 // dato che non ho iteratori, lo stack lo prendo di copia e faccio pop
-
 template<class T,int num=100>
 std::ostream& operator<<(std::ostream& os, stack<T,num> t){
     while(!t.isEmpty()){
-	// bool arrow = false;
-	// if(t.top()->next) arrow = true;
 	os << t.top() << ' ';
 	t.pop();
-	// if (arrow) os << " -> ";
     }
     return os;
 }
@@ -167,7 +166,8 @@ int main(){
     str.push('t');
     str.push('t');
 
-    // std:cout << proc_id.top() << ' ' << proc_id.bottom() << std::endl;
     std::cout << "Proc_id: " << proc_id << std::endl;
     std::cout << "str: " << str << std::endl;
 }
+
+#endif
