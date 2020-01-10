@@ -1,17 +1,19 @@
 #ifndef CODA_H
 #define CODA_H
-#include<iostream>
 
-template<classt T=double>
+#include<iostream>
+template<class T=double>
 class coda{
     class nodo{
+    public:
 	T info;
 	nodo *next, *prev;
 	nodo(const T& t, nodo* n1=nullptr, nodo* n2=nullptr):
 	    info(t),
 	    next(n1),
-	    next(n2)
-	    {}
+	    prev(n2)
+	    {};
+	
 	~nodo(){ delete next; }
     } *first, *last;
 
@@ -26,7 +28,7 @@ class coda{
 	}
 	if(!n2) return false;
 	return (n1->info == n2->info) && confronta(n1->next,n2->next);
-    }
+    };
     
 public:
     coda():
@@ -85,13 +87,18 @@ public:
     class const_iterator{
 	nodo* element;
 	bool inBounds;
+    
+	const_iterator(nodo* n, bool ib):element(n),inBounds(ib){};
     public:
-	const_iterator():element(first),inBounds((first ? true : false)){};
 	const T& operator*(){
-	    return element->info;
+	    if(inBounds)
+		return element->info;
+	    
 	}
 	const T* operator->(){
-	    return &(element->info);
+	    if(inBounds)
+		return &(element->info);
+	    else return nullptr;
 	}
 
 	const_iterator& operator++(){
@@ -119,7 +126,24 @@ public:
 		}
 	    }
 	}
+    };
+    
+    const_iterator begin(){
+	const_iterator to_return = new const_iterator(first,(first ? true : false));
+	return  to_return;
+    }
+
+    const_iterator end(){
+	const_iterator to_return = new cont_iterator((last ? last++ : nullptr), (last ? true : false));
+	return to_return;
     }
 };
 
+template<class T=double>
+std::ostream& operator<<(std::ostream& os, const coda<T>& c){
+    for(coda<T>::const_iterator t = c.begin(); t.inBounds(); ++t){
+	os << *t << ' ';
+    }
+    return os;
+}
 #endif
