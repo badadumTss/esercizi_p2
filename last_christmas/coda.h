@@ -2,6 +2,7 @@
 #define CODA_H
 
 #include<iostream>
+
 template<class T=double>
 class coda{
     class nodo{
@@ -87,20 +88,19 @@ public:
     class const_iterator{
 	nodo* element;
 	bool inBounds;
-    
-	const_iterator(nodo* n, bool ib):element(n),inBounds(ib){};
+	const_iterator(nodo* n, bool ib=true):element(n),inBounds(ib){};
+	friend class coda<T>;
     public:
+	const_iterator():element(nullptr),inBounds(false){}
 	const T& operator*(){
 	    if(inBounds)
 		return element->info;
-	    
 	}
 	const T* operator->(){
 	    if(inBounds)
 		return &(element->info);
 	    else return nullptr;
 	}
-
 	const_iterator& operator++(){
 	    if(!inBounds) return *this;
 	    if(element->next) {
@@ -110,10 +110,8 @@ public:
 		inBounds = false;
 		element++;
 	    }
-
 	    return *this;
 	}
-
 	const_iterator& operator--(){
 	    if(!inBounds){
 		inBounds = true;
@@ -126,24 +124,29 @@ public:
 		}
 	    }
 	}
+	bool operator!=(const const_iterator& i){
+	    return i.element != element;
+	}
     };
-    
-    const_iterator begin(){
-	const_iterator to_return = new const_iterator(first,(first ? true : false));
-	return  to_return;
+    const_iterator begin() const{
+	return first;
     }
-
-    const_iterator end(){
-	const_iterator to_return = new cont_iterator((last ? last++ : nullptr), (last ? true : false));
-	return to_return;
+    const_iterator end() const{
+	if(last) return const_iterator(last+1,false);
+	return nullptr;
     }
 };
 
-template<class T=double>
+template<class T>
 std::ostream& operator<<(std::ostream& os, const coda<T>& c){
-    for(coda<T>::const_iterator t = c.begin(); t.inBounds(); ++t){
-	os << *t << ' ';
+    typename coda<T>::const_iterator iter = c.begin();
+    for(; iter != c.end(); ++iter){
+	os << *iter << ' ';
     }
     return os;
 }
 #endif
+
+/* 
+ATTENTO AI GCH E AI TYPENAME, servono a disambiguare nel contesto
+*/
