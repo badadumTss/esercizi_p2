@@ -3,19 +3,17 @@
 #include "poligono.h"
 
 class triangolo: public poligono{
-
-    point* arr(const point& p1, const point& p2, const point& p3){
-	point *tmp = new point[3];
-	tmp[0] = p1;
-	tmp[1] = p2;
-	tmp[2] = p3;
-	return tmp;
-    }
-    
+    double l1, l2, l3;
 public:
-    triangolo(const point& p1, const point& p2, const point& p3):poligono(3, arr(p1,p2,p3)){}
-    
+    /* Attenzione che così il costrutore non checka la dimensioni dell'array*/
+    triangolo(punto* pts):
+	poligono(3, pts)
+	l1(punto::lung(pts[0],pts[1])),
+	l2(punto::lung(pts[1],pts[2])),
+	l3(punto::lung(pts[2],pts[0]))
+	{}
     double area() const;
+    double perimetro() const;
 }
 
 #endif

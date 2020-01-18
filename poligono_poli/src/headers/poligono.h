@@ -1,20 +1,20 @@
 #ifndef POLIGONO_H
 #define POLIGONO_H
-
-class point{
-    double x, y, z;
-public:
-    point();
-    static double lung(const point&, const point&);
-};
+#include "punto.h"
 
 class poligono{
+    
     unsigned int nVert;
-    point *vert;
+    punto *vert;
+    static punto* copia(punto*,unsigned int);
+    
 public:
-    poligono(unsigned int, point* const);
-    ~poligono();
-    virtual double perimetro() const;	
+    poligono(unsigned int n, punto* v):
+	nVert(n),
+	vert(copia(v,n));
+    virtual ~poligono(){ delete[] vert };
+    virtual double perimetro() const;
+    virtual double area() const = 0;
 }
     
 #endif
