@@ -1,5 +1,5 @@
 # Esercizi PAO
-Raccolta degli esercizi svolti (da [me](github.com/badadumTss)) durante l'anno accademico 2019 - 2020 in preparazione all'esame di programmazione ad oggetti, prof. Ranzato
+Raccolta degli esercizi svolti (da [me](https://www.github.com/badadumTss)) durante l'anno accademico 2019 - 2020 in preparazione all'esame di programmazione ad oggetti, prof. Ranzato
 ### Disclaimer:
 Questa **Non** vuole essere in alcun modo una raccolta di _come andrebbero fatti gli esercizi_, anzi, qui dentro saranno custoditi i miei errori e i miei fallimenti, fatene ciò che volete.
 
