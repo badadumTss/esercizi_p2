@@ -70,7 +70,9 @@ public:
 };
 
 class InForma{
+
   std::vector<const Workout*> allenamenti;
+
 public:
 
   std::vector<Nuoto*> vasche(int x) const{
@@ -104,8 +106,10 @@ public:
 
     // QUI NON TUTTO PERDE ATTIRBUTO CONST: devo eliminare elementi => posso avere iteratori costanti 
     for(std::vector<const Workout*>::const_iterator it = allenamenti.begin(); it != allenamenti.end(); ++it){
-      if(dynamic_cast<const Nuoto*>(*it) && (*it)->calorie() == max_cal)
+      if(dynamic_cast<const Nuoto*>(*it) && (*it)->calorie() == max_cal){
+	delete *it;	        // Questo perchè se eliminassi solo la entry del vettore farebbe garbage
 	allenamenti.erase(it);	// DETERMINA IL NON CONST IN removeNuoto()
+      }
       /*
 	Attenzione!! questa cosa qui sopra si può fare solo da c++11, prima no perchè l'eliminazione era considerata
         una 'modifica' dell'oggetto puntato dall'iteratore; dopo c++11 non più (anche gli oggetti costanti in fondo
