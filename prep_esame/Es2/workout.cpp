@@ -70,43 +70,49 @@ public:
 };
 
 class InForma{
-  std::vector<const Workout *> allenamenti;
+  std::vector<const Workout*> allenamenti;
 public:
+
   std::vector<Nuoto*> vasche(int x) const{
     std::vector<Nuoto*> to_return;
-    for (auto it = allenamenti.begin(); it != allenamenti.end(); ++it ){
-      if ( (*it)->calorie() > x && dynamic_cast<const Nuoto*>(*it) )
-	to_return.push_back((dynamic_cast<const Nuoto*>(*it))->clone());
+    for (std::vector<const Workout*>::const_iterator it = allenamenti.begin(); it != allenamenti.end(); ++it){
+      const Nuoto* current = dynamic_cast<const Nuoto*>(*it);
+      if (current && current->getVasche() > x)
+	to_return.push_back(current->clone());
     }
     return to_return;    
   }
+  
   std::vector<Workout*> calorie(int x) const{
     std::vector<Workout*> to_return;
-    for (auto it = allenamenti.begin(); it != allenamenti.end(); ++it ){
-      if ( (*it)->calorie() > x && dynamic_cast<const Rana*>(*it) ) 
-	to_return.push_back((dynamic_cast<const Rana*>(*it))->clone());
+    for (std::vector<const Workout*>::const_iterator it = allenamenti.begin(); it != allenamenti.end(); ++it){
+      const Rana* current = dynamic_cast<const Rana*>(*it); 
+      if (current && current->calorie() > x) 
+	to_return.push_back(current->clone());
     }
     return to_return;    
   }
+  
   void removeNuoto(){
-    /* 
-    rimuove dagli allenamenti archiviati in app tutti gli allenamenti a nuoto che abbiano il massimo 
-    numero di calorie tra tutti gli allenamenti a nuoto 
-    */
-    // come?? potrei ricostruire la lista ben formata, ma idk
-    // itero due volte sul vettore? ci sta
     int max_cal = 0;
-    for(auto it = allenamenti.begin(); it != allenamenti.end(); ++it){
-      if(dynamic_cast<const Nuoto*>(*it) && (*it)->calorie() > max_cal)
-	max_cal = (*it)->calorie();
+    
+    for(auto it = allenamenti.cbegin(); it != allenamenti.cend(); ++it){ // cbegin() ritorna const_iterator!! non iterator!!
+      const Nuoto* current = dynamic_cast<const Nuoto*>(*it);
+      if(current && current->calorie() > max_cal)
+	max_cal = current->calorie();
     }
 
-    //dovrebbe, probabilmente farà errore per il tipo del contenitore
-    for(auto it = allenamenti.begin(); it != allenamenti.end(); ++it){
+    // QUI NON TUTTO PERDE ATTIRBUTO CONST: devo eliminare elementi => posso avere iteratori costanti 
+    for(std::vector<const Workout*>::const_iterator it = allenamenti.begin(); it != allenamenti.end(); ++it){
       if(dynamic_cast<const Nuoto*>(*it) && (*it)->calorie() == max_cal)
-	allenamenti.erase(it);
+	allenamenti.erase(it);	// DETERMINA IL NON CONST IN removeNuoto()
+      /*
+	Attenzione!! questa cosa qui sopra si può fare solo da c++11, prima no perchè l'eliminazione era considerata
+        una 'modifica' dell'oggetto puntato dall'iteratore; dopo c++11 non più (anche gli oggetti costanti in fondo
+	cessano di esistere prima o poi)
+      */
     }
-    
+
   }
 };
 #endif
