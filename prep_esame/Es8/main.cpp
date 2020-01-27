@@ -36,42 +36,40 @@ public:
 int main(){
   A* p2 = new B(); A* p3 = new C(); B* p4 = new B(); B* p5 = new C(); const A* p6 = new C();
 
-  p2->f();			// A::f B::g A::h // A::f A::g B::h PERCHÈ g cambia!! dentro ad a chiama g() che è la propria g
+  p2->f();			// A::f A::g B::h
   cout << endl;
-  p2->m();			// B::m B::g B::h // A::m (m NON È virtuale!!!!) A::g come sopra
+  p2->m();			// A:m A::g B::h
   cout << endl;
   p3->k();			// C::k C::h
+  // B::k C::g B::h ATETNZIONE: Guadagnare o perdere const equivale a cambiare firma!!!!!!!!!!!!!!
   cout << endl;
-  p3->f();			// A::f C::g C::h <- controllare ultimo
+  p3->f();			// A::f A::g B::h
   cout << endl;
   p4->m();			// B::m B::g B::h
   cout << endl;
   p4->k();			// B::k B::g B::h
   cout << endl;
-  p5->g();			// C::g
+  p5->g();			// C::g 
   cout << endl;
-  // p6->k();			// C::k C::h // NON COMPILA ALLA FINE: dato che la firma in C cambia per la name hiding rule il compilatore vede solamente void A::k() {...} NON COSTANTE 
+  // p6->k();			// calling k casts away constness, dato che staticamente è un A* e la firma base di k non è const
   cout << endl;
-  p6->g();			// A::g oppure NON COMPILA: calling g casts away constness per la name-hiding rule // ALLA FINE COMPILA
+  p6->g();			// A::g 
   cout << endl;
-  (p3->n())->m();		// B::n C::m C::g C::k C::h
+  (p3->n())->m();		// B::n B::m B::g B::h
+  // POTREBBE PERÒ ANCHE FARE AL POSTO DI B::m, A::m A::g B::h!! dipende da cosa prevale: saticità o dinamicità del puntatore?? propendo per dinamicità // E INVECE HA VINTO STATICITà!! a compile-time il compilatore ha bindato un ritorno di tipo A* e quindi la chiamata ->m() è su un oggetto A*!!!!!!!!
+  // cout << endl;
+  (p3->n())->g();		// B::n A::g // stesso discorso di prima
   cout << endl;
-  (p3->n())->g();		// B::n C::g
-  cout << endl;
-  (p3->n())->n()->g();		// B::n B::n C::g
+  (p3->n())->n()->g();		// B::n B::n A::g // STESSO DISCORSO, mettere prima un ->n() non modifica quello che il compilatore può vedere
   cout << endl;
   (p5->n())->g();		// B::n C::g
   cout << endl;
-  (p3->n())->m();		// B::n C::m C::g C::k C::h
+  (p5->n())->m();		// B::n B::m C::g B::h Attento!! qui h acquista const -> un'altra firma!!!!
   cout << endl;
   (dynamic_cast<B*>(p2))->m();	// B::m B::g B::h
   cout << endl;
   (static_cast<C*>(p3))->k();	// C::k C::h
   cout << endl;
-  (static_cast<B*>(p3->n()))->g(); // C::g dovrebbe farglielo fare
+  (static_cast<B*>(p3->n()))->g(); // B::n C::g
   return 0;
-
-  /*
-    TOP hai cannato tutto: SEMPRE verificare: chi è il chiamante? la funzione esiste davvero o la name-hiding rule ha sfanculato tutto per un const?? Attento a Ranzato.
-   */
 }
