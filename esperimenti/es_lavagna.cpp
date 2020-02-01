@@ -12,27 +12,27 @@ public:
 };
 
 class B:public A{
-  void h() {cout << "A::h ";}
+  void h() {cout << "B::h ";}
 public:
-  void g() {cout << "B::g ";}
-  void f() {cout << "B::f "; g(); h();}
+  virtual void g() {cout << "B::g ";}
   void m() {cout << "B::m "; g(); h();}
   void k() {cout << "B::k "; g(); h(); m();}
-  A* n() {cout << "B::n "; return this;}
+  B* n() {cout << "B::n "; return this;}
 };
 
 int main(){
-  B* b = new B();
-  A* a = new B();
-  b->f(); cout << endl;
-  b->m(); cout << endl;
-  b->k(); cout << endl;
-  a->f(); cout << endl;
-  a->m(); cout << endl;
-  a->k(); cout << endl;
-  (b->n())->g(); cout << endl;
-  (b->n())->n()->g(); cout << endl; // B::n A::n B::g !! g è virtuale e quindi il tipo dinamico della seconda n() anche se il tipo statico è A NON CAMBIA
-  (a->n())->g(); cout << endl;
-  (a->n())->m(); cout << endl;
+  B* b = new B(); A* a = new B();
+  b->f(); cout << endl;		    // A::f B::g A::h
+  b->m(); cout << endl;		    // B::m B::g B::h
+  b->k(); cout << endl;		    // B::k B::g B::h B::m B::g B::h
+  a->f(); cout << endl;		    // A::f B::g A::h
+  a->m(); cout << endl;		    // A::m B::g A::h
+  a->k(); cout << endl;		    // B::k B::g B::h B::m B::g B::h
+  (b->n())->g(); cout << endl;	    // B::n B::g
+  (b->n())->n()->g(); cout << endl; // B::n B::n B::g 
+  (a->n())->g(); cout << endl;	    // B::n B::g
+  (a->n())->m(); cout << endl;	    // B::n A::m B::g A::h
   return 0;
 }
+
+// tutto giusto al primo colpo!!!!!
