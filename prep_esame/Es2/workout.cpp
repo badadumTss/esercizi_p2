@@ -8,8 +8,9 @@ public:
   virtual Workout* clone() const = 0;
   virtual int calorie() const = 0;
   unsigned int getMinuti() const{ return minuti; }
-  virtual ~Workout();
+  virtual ~Workout() = 0;
 };
+Workout::~Workout() = default;
 
 class Corsa: public Workout{
   unsigned int Distanza;
