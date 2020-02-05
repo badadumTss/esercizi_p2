@@ -8,11 +8,16 @@ public:
   A(const A& a):x(a.x){ std::cout << "A(const A&) "; } 
 };
 
-class B: public A{
-  int x;
+class C{
 public:
-  B(int y=0):A(y+1),x(y){ std::cout << "B(" << x << ") "; }
-  ~B(){ std::cout << "~B(" << x << ") "; }
+  ~C(){ std::cout << "~C() "; }
+};
+
+class B: public A{
+  C x;
+public:
+  B(int y=0):A(y+1){ std::cout << "B() "; }
+  ~B(){ std::cout << "~B() "; }
   B(const B& a):A(a),x(a.x){ std::cout << "B(const B&) "; } 
 };
 
