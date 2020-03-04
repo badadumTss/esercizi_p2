@@ -8,11 +8,11 @@ class FileAudio{
   std::string titolo;
   double _size;
 public:
-  FileAudio* clone() const = 0;
-  bool qualita() const = 0;
+  virtual FileAudio* clone() const = 0;
+  virtual bool qualita() const = 0;
   double size() const { return _size; }
 
-  virtual bool operator==(FileAudio& file) const {
+  virtual bool operator==(const FileAudio& file) const {
     return titolo == file.titolo;
   }
 };
@@ -44,7 +44,7 @@ public:
   bool operator==(const FileAudio& file) const {
     if(typeid(file) == typeid(const WAV&)){
       const WAV* tmp = dynamic_cast<const WAV*>(&file);
-      return FileAudio::operator==(file) && tmp->sampling == sampling && tmp->lissless == lossless;
+      return FileAudio::operator==(file) && tmp->sampling == sampling && tmp->lossless == lossless;
     } else return false;
   }
 };
