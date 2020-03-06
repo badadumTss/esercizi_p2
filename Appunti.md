@@ -28,8 +28,8 @@ I tipi di ritorno sugli oggetti!
 	 T\* operator->() const { return ptr; }
 
 - const_iterator:
-	 const T& operator\*() const { return \*ptr; }
-	 const T\* operator->() const { return ptr; }
+	const T& operator\*() const { return \*ptr; }
+	const T\* operator->() const { return ptr; }
 
 ## Cast dinamici e statici:
 - **dinamici**:
