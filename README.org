@@ -1,0 +1,14 @@
+#+OVERVIEW: showall
+#+AUTHOR: Luca Zaninotto
+
+* Esercizi PAO
+  Raccolta degli esercizi svolti (da [[https://www.github.com/badadumTss][me]]) durante l'anno accademico 2019 - 2020 
+  in preparazione all'esame di programmazione ad oggetti, prof. Ranzato
+** Disclaimer
+   Questa **Non** vuole essere in alcun modo una raccolta di /come andrebbero fatti gli esercizi/, 
+   anzi, qui dentro saranno custoditi i miei errori e i miei fallimenti, fatene ciò che volete.
+** Parte 1 e Parte 2
+   La parte uno comprende Il programma fino all'ereditarietà multipla (Nel libro fino al cap. 6.7)
+   La parte due comprende dall'ereditarietà multipla in poi
+
+   
