@@ -35,7 +35,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = calculator1.0.0
-DISTDIR = /home/luca/source/esercizi_p2/parte2/calculator/.tmp/calculator1.0.0
+DISTDIR = /home/luca/source/esercizi_p2/2parte/calculator/.tmp/calculator1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
 LIBS          = $(SUBLIBS) -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
@@ -50,15 +50,25 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = inputbuttons.cc \
-		main.cc \
-		mywidget.cc moc_inputbuttons.cpp \
-		moc_mywidget.cpp
-OBJECTS       = inputbuttons.o \
-		main.o \
-		mywidget.o \
-		moc_inputbuttons.o \
-		moc_mywidget.o
+SOURCES       = main.cc \
+		model/model.cc \
+		view/mainview.cc \
+		model/hierachy/alu.cc \
+		model/hierachy/exeptions.cc \
+		model/hierachy/memory.cc \
+		view/widgets/display.cc \
+		view/widgets/funpad.cc \
+		view/widgets/numpad.cc moc_mainview.cpp
+OBJECTS       = main.o \
+		model.o \
+		mainview.o \
+		alu.o \
+		exeptions.o \
+		memory.o \
+		display.o \
+		funpad.o \
+		numpad.o \
+		moc_mainview.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -113,7 +123,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -132,10 +141,23 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		calculator.pro inputbuttons.h \
-		mywidget.h inputbuttons.cc \
-		main.cc \
-		mywidget.cc
+		calculator.pro model/model.h \
+		view/mainview.h \
+		model/hierachy/accumulator.h \
+		model/hierachy/alu.h \
+		model/hierachy/exeptions.h \
+		model/hierachy/memory.h \
+		view/widgets/display.h \
+		view/widgets/funpad.h \
+		view/widgets/numpad.h main.cc \
+		model/model.cc \
+		view/mainview.cc \
+		model/hierachy/alu.cc \
+		model/hierachy/exeptions.cc \
+		model/hierachy/memory.cc \
+		view/widgets/display.cc \
+		view/widgets/funpad.cc \
+		view/widgets/numpad.cc
 QMAKE_TARGET  = calculator
 DESTDIR       = 
 TARGET        = calculator
@@ -201,7 +223,6 @@ Makefile: calculator.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.c
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -279,7 +300,6 @@ Makefile: calculator.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.c
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
-.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -317,8 +337,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents inputbuttons.h mywidget.h $(DISTDIR)/
-	$(COPY_FILE) --parents inputbuttons.cc main.cc mywidget.cc $(DISTDIR)/
+	$(COPY_FILE) --parents model/model.h view/mainview.h model/hierachy/accumulator.h model/hierachy/alu.h model/hierachy/exeptions.h model/hierachy/memory.h view/widgets/display.h view/widgets/funpad.h view/widgets/numpad.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cc model/model.cc view/mainview.cc model/hierachy/alu.cc model/hierachy/exeptions.cc model/hierachy/memory.cc view/widgets/display.cc view/widgets/funpad.cc view/widgets/numpad.cc $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -350,18 +370,19 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -W -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_inputbuttons.cpp moc_mywidget.cpp
+compiler_moc_header_make_all: moc_mainview.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_inputbuttons.cpp moc_mywidget.cpp
-moc_inputbuttons.cpp: inputbuttons.h \
+	-$(DEL_FILE) moc_mainview.cpp
+moc_mainview.cpp: model/model.h \
+		model/hierachy/alu.h \
+		model/hierachy/memory.h \
+		view/widgets/display.h \
+		view/widgets/numpad.h \
+		view/widgets/funpad.h \
+		view/mainview.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/luca/source/esercizi_p2/parte2/calculator -I/home/luca/source/esercizi_p2/parte2/calculator -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include inputbuttons.h -o moc_inputbuttons.cpp
-
-moc_mywidget.cpp: mywidget.h \
-		moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/luca/source/esercizi_p2/parte2/calculator -I/home/luca/source/esercizi_p2/parte2/calculator -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mywidget.h -o moc_mywidget.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/luca/source/esercizi_p2/2parte/calculator -I/home/luca/source/esercizi_p2/2parte/calculator -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include view/mainview.h -o moc_mainview.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -377,21 +398,44 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-inputbuttons.o: inputbuttons.cc inputbuttons.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o inputbuttons.o inputbuttons.cc
-
-main.o: main.cc mywidget.h
+main.o: main.cc 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cc
 
-mywidget.o: mywidget.cc mywidget.h \
-		inputbuttons.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mywidget.o mywidget.cc
+model.o: model/model.cc model/model.h \
+		model/hierachy/alu.h \
+		model/hierachy/memory.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o model.o model/model.cc
 
-moc_inputbuttons.o: moc_inputbuttons.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_inputbuttons.o moc_inputbuttons.cpp
+mainview.o: view/mainview.cc view/mainview.h \
+		model/model.h \
+		model/hierachy/alu.h \
+		model/hierachy/memory.h \
+		view/widgets/display.h \
+		view/widgets/numpad.h \
+		view/widgets/funpad.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainview.o view/mainview.cc
 
-moc_mywidget.o: moc_mywidget.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mywidget.o moc_mywidget.cpp
+alu.o: model/hierachy/alu.cc model/hierachy/alu.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o alu.o model/hierachy/alu.cc
+
+exeptions.o: model/hierachy/exeptions.cc model/hierachy/exeptions.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o exeptions.o model/hierachy/exeptions.cc
+
+memory.o: model/hierachy/memory.cc model/hierachy/memory.h \
+		model/hierachy/exeptions.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memory.o model/hierachy/memory.cc
+
+display.o: view/widgets/display.cc view/widgets/display.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o display.o view/widgets/display.cc
+
+funpad.o: view/widgets/funpad.cc view/widgets/funpad.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o funpad.o view/widgets/funpad.cc
+
+numpad.o: view/widgets/numpad.cc view/widgets/numpad.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o numpad.o view/widgets/numpad.cc
+
+moc_mainview.o: moc_mainview.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainview.o moc_mainview.cpp
 
 ####### Install
 
