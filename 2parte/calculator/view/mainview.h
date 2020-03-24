@@ -7,6 +7,7 @@
 #include "widgets/funpad.h"
 #include <QWidget>
 #include <QString>
+#include <QGridLayout>
 
 enum op {plus, minus, times, over}; 
 
@@ -17,6 +18,7 @@ private:
 	display* _display;
 	numpad* _numpad;
 	funpad* _funpad;
+	QGridLayout* layout;
 public:
 	mainView(QWidget* parent = Q_NULLPTR, model* c = nullptr);
 	~mainView();

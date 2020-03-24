@@ -55,20 +55,20 @@ SOURCES       = main.cc \
 		view/mainview.cc \
 		model/hierachy/alu.cc \
 		model/hierachy/exeptions.cc \
-		model/hierachy/memory.cc \
-		view/widgets/display.cc \
-		view/widgets/funpad.cc \
-		view/widgets/numpad.cc moc_mainview.cpp
+		model/hierachy/memory.cc moc_mainview.cpp \
+		moc_display.cpp \
+		moc_funpad.cpp \
+		moc_numpad.cpp
 OBJECTS       = main.o \
 		model.o \
 		mainview.o \
 		alu.o \
 		exeptions.o \
 		memory.o \
-		display.o \
-		funpad.o \
-		numpad.o \
-		moc_mainview.o
+		moc_mainview.o \
+		moc_display.o \
+		moc_funpad.o \
+		moc_numpad.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -123,6 +123,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -154,10 +155,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		view/mainview.cc \
 		model/hierachy/alu.cc \
 		model/hierachy/exeptions.cc \
-		model/hierachy/memory.cc \
-		view/widgets/display.cc \
-		view/widgets/funpad.cc \
-		view/widgets/numpad.cc
+		model/hierachy/memory.cc
 QMAKE_TARGET  = calculator
 DESTDIR       = 
 TARGET        = calculator
@@ -223,6 +221,7 @@ Makefile: calculator.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.c
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -300,6 +299,7 @@ Makefile: calculator.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.c
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -338,7 +338,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents model/model.h view/mainview.h model/hierachy/accumulator.h model/hierachy/alu.h model/hierachy/exeptions.h model/hierachy/memory.h view/widgets/display.h view/widgets/funpad.h view/widgets/numpad.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cc model/model.cc view/mainview.cc model/hierachy/alu.cc model/hierachy/exeptions.cc model/hierachy/memory.cc view/widgets/display.cc view/widgets/funpad.cc view/widgets/numpad.cc $(DISTDIR)/
+	$(COPY_FILE) --parents main.cc model/model.cc view/mainview.cc model/hierachy/alu.cc model/hierachy/exeptions.cc model/hierachy/memory.cc $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -370,12 +370,13 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -W -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainview.cpp
+compiler_moc_header_make_all: moc_mainview.cpp moc_display.cpp moc_funpad.cpp moc_numpad.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainview.cpp
+	-$(DEL_FILE) moc_mainview.cpp moc_display.cpp moc_funpad.cpp moc_numpad.cpp
 moc_mainview.cpp: model/model.h \
 		model/hierachy/alu.h \
 		model/hierachy/memory.h \
+		model/hierachy/exeptions.h \
 		view/widgets/display.h \
 		view/widgets/numpad.h \
 		view/widgets/funpad.h \
@@ -383,6 +384,21 @@ moc_mainview.cpp: model/model.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/luca/source/esercizi_p2/2parte/calculator -I/home/luca/source/esercizi_p2/2parte/calculator -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include view/mainview.h -o moc_mainview.cpp
+
+moc_display.cpp: view/widgets/display.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/luca/source/esercizi_p2/2parte/calculator -I/home/luca/source/esercizi_p2/2parte/calculator -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include view/widgets/display.h -o moc_display.cpp
+
+moc_funpad.cpp: view/widgets/funpad.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/luca/source/esercizi_p2/2parte/calculator -I/home/luca/source/esercizi_p2/2parte/calculator -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include view/widgets/funpad.h -o moc_funpad.cpp
+
+moc_numpad.cpp: view/widgets/numpad.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/luca/source/esercizi_p2/2parte/calculator -I/home/luca/source/esercizi_p2/2parte/calculator -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include view/widgets/numpad.h -o moc_numpad.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -398,18 +414,27 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-main.o: main.cc 
+main.o: main.cc view/mainview.h \
+		model/model.h \
+		model/hierachy/alu.h \
+		model/hierachy/memory.h \
+		model/hierachy/exeptions.h \
+		view/widgets/display.h \
+		view/widgets/numpad.h \
+		view/widgets/funpad.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cc
 
 model.o: model/model.cc model/model.h \
 		model/hierachy/alu.h \
-		model/hierachy/memory.h
+		model/hierachy/memory.h \
+		model/hierachy/exeptions.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o model.o model/model.cc
 
 mainview.o: view/mainview.cc view/mainview.h \
 		model/model.h \
 		model/hierachy/alu.h \
 		model/hierachy/memory.h \
+		model/hierachy/exeptions.h \
 		view/widgets/display.h \
 		view/widgets/numpad.h \
 		view/widgets/funpad.h
@@ -425,17 +450,17 @@ memory.o: model/hierachy/memory.cc model/hierachy/memory.h \
 		model/hierachy/exeptions.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memory.o model/hierachy/memory.cc
 
-display.o: view/widgets/display.cc view/widgets/display.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o display.o view/widgets/display.cc
-
-funpad.o: view/widgets/funpad.cc view/widgets/funpad.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o funpad.o view/widgets/funpad.cc
-
-numpad.o: view/widgets/numpad.cc view/widgets/numpad.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o numpad.o view/widgets/numpad.cc
-
 moc_mainview.o: moc_mainview.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainview.o moc_mainview.cpp
+
+moc_display.o: moc_display.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_display.o moc_display.cpp
+
+moc_funpad.o: moc_funpad.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_funpad.o moc_funpad.cpp
+
+moc_numpad.o: moc_numpad.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_numpad.o moc_numpad.cpp
 
 ####### Install
 
